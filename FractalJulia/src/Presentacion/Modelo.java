@@ -8,6 +8,7 @@ package Presentacion;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 
 /**
@@ -16,13 +17,13 @@ import javax.swing.JFrame;
  */
 public class Modelo {
     private Canvas lienzo;
-    private Canvas lienzo2;
     private Graphics g2;
     private Graphics g;
     private int width;
     private int height;
     private Vista ventana;
     private boolean isDraw;
+    private BufferedImage buffer;//Se utiliza un bufferImage para evitar el mal renderizado del dibujo
     public Modelo(){
         isDraw=false;
     }
@@ -38,22 +39,29 @@ public class Modelo {
         getVentana().getLabelMensaje().setText("");
     }
     public void limpiarCanvas(){
-        lienzo2=getVentana().getLienzo();
-        g2=lienzo2.getGraphics();
-        width=lienzo2.getWidth();
-        height=lienzo2.getHeight();
+        lienzo=getVentana().getLienzo();
+        buffer=new BufferedImage(lienzo.getWidth(), lienzo.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        g=lienzo.getGraphics();
+        g2=buffer.getGraphics();
+        width=lienzo.getWidth();
+        height=lienzo.getHeight();
+        g2.setColor(lienzo.getBackground());
         for(int x=0;x<width;x++){
             for(int y=0;y<height;y++){
                 g2.drawLine(x, y, x, y);
                 g2.setColor(Color.black);
             }
         }
+        g.drawImage(buffer, 0, 0, lienzo);
     }
     public void dibujarFractalMandelbrot(){
         lienzo=getVentana().getLienzo();
+        buffer=new BufferedImage(lienzo.getWidth(), lienzo.getHeight(), BufferedImage.TYPE_INT_ARGB);
         g=lienzo.getGraphics();
+        g2=buffer.getGraphics();
         width=lienzo.getWidth();
         height=lienzo.getHeight();
+        g2.setColor(lienzo.getBackground());
         for(int x=0;x<width;x++){
             for(int y=0;y<height;y++){
                 double a=normalizar(x,0,width,-2.0,2.0);
@@ -69,29 +77,30 @@ public class Modelo {
                     n++;
                 }
                 if(n>=0 && n<750){
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(4*n%255, n%3*30, 50));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(4*n%255, n%3*30, 50));
                 }else if (n>=750&&n<1500) {
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(100, n*3%50, n%255));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(100, n*3%50, n%255));
                 }else if (n>=1500&&n<2250) {
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(n*4%255, n%247, n%237));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(n*4%255, n%247, n%237));
                 }else if (n>=2250&&n<3000) {
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(n%255, 77, 0));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(n%255, 77, 0));
                 }else if (n>=3000&&n<3750) {
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(255, n%2*255, 3*n%255));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(255, n%2*255, 3*n%255));
                 }else if (n>=3750&&n<4500) {
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(4*n%255, n%3*30, 50));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(4*n%255, n%3*30, 50));
                 }else{
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(n%18, n%37, n%177));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(n%18, n%37, n%177));
                 }
             }
-        } 
+        }
+        g.drawImage(buffer, 0, 0, lienzo);
     }
     public void casoDibujo(int caso){
         switch (caso){
@@ -168,9 +177,12 @@ public class Modelo {
                 break;
         }
         lienzo=getVentana().getLienzo();
+        buffer=new BufferedImage(lienzo.getWidth(), lienzo.getHeight(), BufferedImage.TYPE_INT_ARGB);
         g=lienzo.getGraphics();
+        g2=buffer.getGraphics();
         width=lienzo.getWidth();
         height=lienzo.getHeight();
+        g2.setColor(lienzo.getBackground());
         for(int x=0;x<width;x++){
             for(int y=0;y<height;y++){
                 double a=normalizar(x,0,width,newMin,newMax);
@@ -191,29 +203,30 @@ public class Modelo {
                     n++;
                 }
                 if(n>=0 && n<750){
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(4*n%255, n%3*30, 50));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(4*n%255, n%3*30, 50));
                 }else if (n>=750&&n<1500) {
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(100, n*3%50, n%255));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(100, n*3%50, n%255));
                 }else if (n>=1500&&n<2250) {
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(n*4%255, n%247, n%237));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(n*4%255, n%247, n%237));
                 }else if (n>=2250&&n<3000) {
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(n%255, 77, 0));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(n%255, 77, 0));
                 }else if (n>=3000&&n<3750) {
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(255, n%2*255, 3*n%255));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(255, n%2*255, 3*n%255));
                 }else if (n>=3750&&n<4500) {
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(4*n%255, n%3*30, 50));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(4*n%255, n%3*30, 50));
                 }else{
-                    g.drawLine(x, y, x, y);
-                    g.setColor(new Color(n%18, n%37, n%177));
+                    g2.drawLine(x, y, x, y);
+                    g2.setColor(new Color(n%18, n%37, n%177));
                 }
             }
         }
+        g.drawImage(buffer, 0, 0, lienzo);
     }
     public void dibujar(){
         getVentana().lblMensaje();
