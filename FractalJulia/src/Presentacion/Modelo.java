@@ -170,10 +170,10 @@ public class Modelo {
                 cb=0;
                 break;
             case 10:
-                newMin=-1.2;
-                newMax=1.2;
-                ca=0;
-                cb=-0.8;
+                newMin=-1.5;
+                newMax=1.5;
+                ca=-0.8;
+                cb=0;
                 break;
         }
         lienzo=getVentana().getLienzo();
@@ -188,7 +188,7 @@ public class Modelo {
                 double a=normalizar(x,0,width,newMin,newMax);
                 double b=normalizar(y,0,height,newMin,newMax);
                 int n=0;
-                while(n<1000 && a*a+b*b<20){
+                while(n<1000 && a*a+b*b<4){
                     double aa;
                     double bb;
                     if(caso==2||caso==3 || caso==4|| caso==5||caso==6|| caso==7||caso==10){
